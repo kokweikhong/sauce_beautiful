@@ -107,25 +107,21 @@
 	{:else}
 		<div class="mb-8 space-y-6">
 			{#each orderRecords as record (record.date)}
-				<div class="rounded-lg bg-white p-6 shadow-md sm:p-8">
-					<h2 class="mb-4 text-3xl font-semibold text-gray-800 sm:text-4xl">{record.date}</h2>
-					<ul class="mb-4 space-y-3">
+				<div class="rounded-lg bg-white p-6 shadow-md">
+					<h2 class="mb-4 text-2xl font-semibold text-gray-800">{record.date}</h2>
+					<ul class="mb-4 space-y-2">
 						{#each record.items as item}
-							<li
-								class="flex flex-col gap-3 rounded bg-gray-50 p-4 text-gray-700 sm:flex-row sm:items-center sm:justify-between"
-							>
-								<span class="text-lg font-medium sm:text-base">{item.name}</span>
+							<li class="flex items-center justify-between text-gray-700">
+								<span>{item.name}</span>
 								<div class="flex items-center gap-3">
-									<span class="text-lg sm:text-base"
-										>{item.value} (RM{(item.amountInCents / 100).toFixed(2)})</span
-									>
+									<span>{item.value} (RM{(item.amountInCents / 100).toFixed(2)})</span>
 									<button
 										on:click={() => {
 											item.value--;
 											record.totalAmountInCents -= item.amountInCents;
 											saveOrderRecords();
 										}}
-										class="rounded bg-red-500 px-4 py-2 text-lg font-semibold text-white hover:bg-red-600 sm:px-2 sm:py-1 sm:text-base"
+										class="rounded bg-red-500 px-2 py-1 font-semibold text-white hover:bg-red-600"
 									>
 										−
 									</button>
@@ -135,7 +131,7 @@
 											record.totalAmountInCents += item.amountInCents;
 											saveOrderRecords();
 										}}
-										class="rounded bg-green-500 px-4 py-2 text-lg font-semibold text-white hover:bg-green-600 sm:px-2 sm:py-1 sm:text-base"
+										class="rounded bg-green-500 px-2 py-1 font-semibold text-white hover:bg-green-600"
 									>
 										+
 									</button>
@@ -144,13 +140,13 @@
 						{/each}
 					</ul>
 					<div class="mb-4 border-t pt-4">
-						<p class="text-2xl font-semibold text-gray-900 sm:text-lg">
+						<p class="text-lg font-semibold text-gray-900">
 							Total: RM{(record.totalAmountInCents / 100).toFixed(2)}
 						</p>
 					</div>
 					<button
 						on:click={() => deleteOrderRecord(record.date)}
-						class="w-full rounded bg-red-500 px-4 py-3 text-lg font-semibold text-white transition hover:bg-red-600 sm:w-auto"
+						class="rounded bg-red-500 px-4 py-2 font-semibold text-white transition hover:bg-red-600"
 					>
 						Delete
 					</button>
