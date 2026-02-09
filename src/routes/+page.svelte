@@ -28,7 +28,7 @@
 	};
 
 	let orderRecords: OrderRecord[] = [];
-	let newDate: string = '';
+	let newDate: string = new Date().toISOString().split('T')[0];
 
 	function createNewOrderDate(date: string): OrderRecord {
 		const orderData = {
@@ -50,11 +50,36 @@
 		saveOrderRecords();
 	}
 
+	function deleteAllOrderRecords() {
+		orderRecords = [];
+		saveOrderRecords();
+	}
+
 	function loadOrderRecords() {
 		const data = localStorage.getItem('orderRecords');
 		if (data) {
 			orderRecords = JSON.parse(data);
 		}
+	}
+
+	function exportOrderRecordsAsText() {
+		const BOM = '\uFEFF';
+		let textContent = 'Date\tItem\tValue\tAmountInCents\n';
+
+		orderRecords.forEach((record) => {
+			record.items.forEach((item) => {
+				textContent += `${record.date}\t${item.name}\t${item.value}\t${item.amountInCents}\n`;
+			});
+		});
+
+		const blob = new Blob([BOM + textContent], { type: 'text/plain;charset=utf-8;' });
+		const link = document.createElement('a');
+		link.setAttribute('href', URL.createObjectURL(blob));
+		const today = new Date().toISOString().split('T')[0];
+		link.setAttribute('download', `sauce_beautiful_order_records_${today}.txt`);
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
 	}
 
 	onMount(() => {
@@ -98,6 +123,20 @@
 				class="rounded bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600 sm:px-6 sm:text-base"
 			>
 				Add Record
+			</button>
+		</div>
+		<div class="mt-4 flex gap-4">
+			<button
+				on:click={exportOrderRecordsAsText}
+				class="rounded bg-green-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-600 sm:px-6 sm:text-base"
+			>
+				Export as Text
+			</button>
+			<button
+				on:click={deleteAllOrderRecords}
+				class="ml-4 rounded bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600 sm:px-6 sm:text-base"
+			>
+				Delete All Records
 			</button>
 		</div>
 	</div>
